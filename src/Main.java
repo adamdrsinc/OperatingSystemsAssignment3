@@ -7,76 +7,90 @@ import java.util.regex.Pattern;
 
 public static void main(String[] args) {
 
-    String[] command = getUserCommand();
-    String[] commandArguments = new String[0];
+    while(true){
+        String[] command = getUserCommand();
+        String[] commandArguments = new String[0];
 
 
-    System.out.println("Command: " + Arrays.toString(command));
+        //System.out.println("Command: " + Arrays.toString(command));
 
-    switch(command[0]){
-        case ConsoleCommands.PTIME:
-            System.out.println("ptime");
+        switch(command[0]){
+            case ConsoleCommands.PTIME:
+                System.out.println("ptime");
 
-            if (command.length > 1) {
-                commandArguments = Arrays.copyOfRange(command, 1, command.length);
-            }
+                if (command.length > 1) {
+                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
+                }
 
+                break;
+            case ConsoleCommands.LIST:
+
+                if (command.length > 1) {
+                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
+                }
+
+                ListCommand.performLSCommand(commandArguments);
+
+
+                break;
+            case ConsoleCommands.CD:
+
+                if (command.length > 1) {
+                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
+                }
+
+                String changeDir = ChangeDirectoryCommand.performCDCommand(commandArguments);
+                switch(changeDir){
+                    case ChangeDirectoryReturnStatements.INVALID_DIRECTORY:
+                        DirectoryUtilities
+                                .printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY + "\n");
+                        break;
+                    case ChangeDirectoryReturnStatements.NO_CHILDREN:
+                        DirectoryUtilities
+                                .printDirectoryToCommandLine(ChangeDirectoryReturnStatements.NO_CHILDREN + "\n");
+                        break;
+                    case null:
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + changeDir);
+                }
             break;
-        case ConsoleCommands.LIST:
-            System.out.println("list");
+            case ConsoleCommands.MDIR:
+                System.out.println("mdir");
 
-            if (command.length > 1) {
-                commandArguments = Arrays.copyOfRange(command, 1, command.length);
-            }
+                if (command.length > 1) {
+                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
+                }
 
-            ListCommand.performLSCommand(commandArguments);
+                break;
+            case ConsoleCommands.RDIR:
+                System.out.println("rdir");
 
+                if (command.length > 1) {
+                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
+                }
 
-            break;
-        case ConsoleCommands.CD:
-            System.out.println("cd");
+                break;
+            case ConsoleCommands.PIPE:
+                System.out.println("pipe");
 
-            if (command.length > 1) {
-                commandArguments = Arrays.copyOfRange(command, 1, command.length);
-            }
+                if (command.length > 1) {
+                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
+                }
 
-            break;
-        case ConsoleCommands.MDIR:
-            System.out.println("mdir");
+                break;
+            case ConsoleCommands.EXIT:
+                System.out.println("exit");
 
-            if (command.length > 1) {
-                commandArguments = Arrays.copyOfRange(command, 1, command.length);
-            }
+                System.exit(1);
 
-            break;
-        case ConsoleCommands.RDIR:
-            System.out.println("rdir");
-
-            if (command.length > 1) {
-                commandArguments = Arrays.copyOfRange(command, 1, command.length);
-            }
-
-            break;
-        case ConsoleCommands.PIPE:
-            System.out.println("pipe");
-
-            if (command.length > 1) {
-                commandArguments = Arrays.copyOfRange(command, 1, command.length);
-            }
-
-            break;
-        case ConsoleCommands.EXIT:
-            System.out.println("exit");
-
-            if (command.length > 1) {
-                commandArguments = Arrays.copyOfRange(command, 1, command.length);
-            }
-
-            break;
-        default:
-            System.out.println("Invalid command");
-            break;
+                break;
+            default:
+                System.out.println("Invalid command");
+                break;
+        }
     }
+
 
 }
 
@@ -85,7 +99,7 @@ private static String[] getUserCommand(){
     Scanner scanner = new Scanner(System.in);
     String input = "";
 
-    DirectoryUtilities.printDirectoryToCommandLine();
+    DirectoryUtilities.printDirectoryToCommandLine("");
     input = scanner.nextLine();
 
     return splitCommand(input);

@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class ListCommand {
 
     public static void performLSCommand(String[] arguments){
-        System.out.println("Performing ls command with arguments: " + Arrays.toString(arguments));
+        //System.out.println("Performing ls command with arguments: " + Arrays.toString(arguments));
 
         File directory = new File(DirectoryUtilities.getCurrentDirectory());
         File[] files = directory.listFiles();
