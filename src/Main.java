@@ -11,34 +11,22 @@ public static void main(String[] args) {
         String[] command = getUserCommand();
         String[] commandArguments = new String[0];
 
+        if (command.length > 1) {
+            commandArguments = Arrays.copyOfRange(command, 1, command.length);
+        }
 
         //System.out.println("Command: " + Arrays.toString(command));
 
         switch(command[0]){
             case ConsoleCommands.PTIME:
                 System.out.println("ptime");
-
-                if (command.length > 1) {
-                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
-                }
-
                 break;
+
             case ConsoleCommands.LIST:
-
-                if (command.length > 1) {
-                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
-                }
-
                 ListCommand.performLSCommand(commandArguments);
-
-
                 break;
+
             case ConsoleCommands.CD:
-
-                if (command.length > 1) {
-                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
-                }
-
                 String changeDir = ChangeDirectoryCommand.performCDCommand(commandArguments);
                 switch(changeDir){
                     case ChangeDirectoryReturnStatements.INVALID_DIRECTORY:
@@ -54,37 +42,24 @@ public static void main(String[] args) {
                     default:
                         throw new IllegalStateException("Unexpected value: " + changeDir);
                 }
-            break;
+                break;
+
             case ConsoleCommands.MDIR:
                 System.out.println("mdir");
-
-                if (command.length > 1) {
-                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
-                }
-
                 break;
+
             case ConsoleCommands.RDIR:
                 System.out.println("rdir");
-
-                if (command.length > 1) {
-                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
-                }
-
                 break;
+
             case ConsoleCommands.PIPE:
                 System.out.println("pipe");
-
-                if (command.length > 1) {
-                    commandArguments = Arrays.copyOfRange(command, 1, command.length);
-                }
-
                 break;
+
             case ConsoleCommands.EXIT:
-                System.out.println("exit");
-
                 System.exit(1);
-
                 break;
+
             default:
                 System.out.println("Invalid command");
                 break;
