@@ -4,12 +4,9 @@ import java.util.regex.Pattern;
 
 public static void main(String[] args) {
 
-
     while(true){
         String[] totalCommand = getUserCommand();
-        
-        ConsoleCommand command = null;
-        ArrayList<String> arguments = new ArrayList<String>();
+
         Map<String, ConsoleCommand> commands = ConsoleCommands.commands;
         Map<String, ArrayList<String>> commandsAndArguments = new HashMap<String, ArrayList<String>>();
 
@@ -27,12 +24,19 @@ public static void main(String[] args) {
         for(Map.Entry<String, ArrayList<String>> entry : commandsAndArguments.entrySet()){
             ConsoleCommand currentCommandObject = commands.get(entry.getKey());
             currentCommandObject.executeCommand(entry.getValue());
+
+            ArrayList<String> commandAndArguments = new ArrayList<String>();
+            commandAndArguments.add(entry.getKey());
+            commandAndArguments.addAll(entry.getValue());
+            CommandHistory.previousCommands.add(commandAndArguments);
         }
 
 
     }
 
 }
+
+
 
 
 private static String[] getUserCommand(){

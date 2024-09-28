@@ -9,6 +9,7 @@ public class ConsoleCommands {
     public static final String PIPE = "|";
     public static final String EXIT = "exit";
     public static final String PREVIOUS_COMMAND = "^";
+    public static final String HISTORY = "history";
 
     public static Map<String, ConsoleCommand> commands = Map.of(
         PTIME, new PipeCommand(),
@@ -18,6 +19,7 @@ public class ConsoleCommands {
         RDIR, new RemoveDirectoryCommand(),
         PIPE, new PipeCommand(),
         EXIT, new ExitCommand(),
-        PREVIOUS_COMMAND, new PreviousCommand()
+        PREVIOUS_COMMAND, new PreviousCommand(),
+        HISTORY, new CommandHistory()
     );
 }
