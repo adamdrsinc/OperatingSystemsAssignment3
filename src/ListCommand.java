@@ -1,11 +1,11 @@
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 
-public class ListCommand {
+public class ListCommand implements ConsoleCommand{
 
-    public static void performLSCommand(String[] arguments){
+/*    public static void performLSCommand(String[] arguments){
         //System.out.println("Performing ls command with arguments: " + Arrays.toString(arguments));
 
         File directory = new File(DirectoryUtilities.getCurrentDirectory());
@@ -17,7 +17,7 @@ public class ListCommand {
                     System.out.println(getFormattedFileString(file));
             }
         }
-    }
+    }*/
 
     private static String getFormattedFileString(File file){
         String fileName = file.getName();
@@ -35,6 +35,19 @@ public class ListCommand {
         //drwx size dateModified fileName
         return String.format("%s %10d %20s %s", permissions, fileSize, lastModifiedString, fileName);
 
+    }
+
+    @Override
+    public void executeCommand(ArrayList<String> arguments) {
+        File directory = new File(DirectoryUtilities.getCurrentDirectory());
+        File[] files = directory.listFiles();
+
+        if (files != null){
+            for(File file: files){
+                if(file.isDirectory() || file.isFile())
+                    System.out.println(getFormattedFileString(file));
+            }
+        }
     }
 }
 

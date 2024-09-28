@@ -1,71 +1,36 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public static void main(String[] args) {
 
+
     while(true){
-        String[] command = getUserCommand();
-        String[] commandArguments = new String[0];
+        String[] totalCommand = getUserCommand();
+        
+        ConsoleCommand command = null;
+        ArrayList<String> arguments = new ArrayList<String>();
+        Map<String, ConsoleCommand> commands = ConsoleCommands.commands;
+        Map<String, ArrayList<String>> commandsAndArguments = new HashMap<String, ArrayList<String>>();
 
-        if (command.length > 1) {
-            commandArguments = Arrays.copyOfRange(command, 1, command.length);
+        String currentCommand = "";
+        for (String currentItem : totalCommand) {
+            if (commands.containsKey(currentItem)) {
+                commandsAndArguments.put(currentItem, new ArrayList<String>());
+                currentCommand = currentItem;
+            } else {
+                if(!currentCommand.isEmpty())
+                    commandsAndArguments.get(currentCommand).add(currentItem);
+            }
         }
 
-        //System.out.println("Command: " + Arrays.toString(command));
-
-        switch(command[0]){
-            case ConsoleCommands.PTIME:
-                System.out.println("ptime");
-                break;
-
-            case ConsoleCommands.LIST:
-                ListCommand.performLSCommand(commandArguments);
-                break;
-
-            case ConsoleCommands.CD:
-                ChangeDirectoryCommand.performCDCommand(commandArguments);
-                /*switch(changeDir){
-                    case ChangeDirectoryReturnStatements.INVALID_DIRECTORY:
-                        DirectoryUtilities
-                                .printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY + "\n");
-                        break;
-                    case ChangeDirectoryReturnStatements.NO_CHILDREN:
-                        DirectoryUtilities
-                                .printDirectoryToCommandLine(ChangeDirectoryReturnStatements.NO_CHILDREN + "\n");
-                        break;
-                    case null:
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + changeDir);
-                }*/
-                break;
-
-            case ConsoleCommands.MDIR:
-                DirectoryUtilities.makeDirectory(commandArguments);
-                break;
-
-            case ConsoleCommands.RDIR:
-                DirectoryUtilities.removeDirectory(commandArguments);
-                break;
-
-            case ConsoleCommands.PIPE:
-                System.out.println("pipe");
-                break;
-
-            case ConsoleCommands.EXIT:
-                System.exit(1);
-                break;
-
-            default:
-                System.out.println("Invalid command");
-                break;
+        for(Map.Entry<String, ArrayList<String>> entry : commandsAndArguments.entrySet()){
+            ConsoleCommand currentCommandObject = commands.get(entry.getKey());
+            currentCommandObject.executeCommand(entry.getValue());
         }
+
+
     }
-
 
 }
 
