@@ -27,8 +27,8 @@ public static void main(String[] args) {
                 break;
 
             case ConsoleCommands.CD:
-                String changeDir = ChangeDirectoryCommand.performCDCommand(commandArguments);
-                switch(changeDir){
+                ChangeDirectoryCommand.performCDCommand(commandArguments);
+                /*switch(changeDir){
                     case ChangeDirectoryReturnStatements.INVALID_DIRECTORY:
                         DirectoryUtilities
                                 .printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY + "\n");
@@ -41,15 +41,15 @@ public static void main(String[] args) {
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + changeDir);
-                }
+                }*/
                 break;
 
             case ConsoleCommands.MDIR:
-                System.out.println("mdir");
+                DirectoryUtilities.makeDirectory(commandArguments);
                 break;
 
             case ConsoleCommands.RDIR:
-                System.out.println("rdir");
+                DirectoryUtilities.removeDirectory(commandArguments);
                 break;
 
             case ConsoleCommands.PIPE:

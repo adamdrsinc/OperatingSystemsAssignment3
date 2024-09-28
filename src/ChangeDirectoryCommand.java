@@ -4,13 +4,12 @@ import java.util.Objects;
 
 public class ChangeDirectoryCommand {
 
-    public static String performCDCommand(String[] arguments){
+    public static void performCDCommand(String[] arguments){
         //System.out.println("Performing cd command with arguments: " + Arrays.toString(arguments));
 
         //If no arguments are passed, go to the home folder.
         if(arguments.length == 0){
             System.setProperty("user.dir", System.getProperty("user.home"));
-            return null;
         }
         //Else, go to the folder specified if it is valid.
         else {
@@ -24,28 +23,30 @@ public class ChangeDirectoryCommand {
                     System.setProperty("user.dir", parentDirectory.getAbsolutePath());
                 }
                 else{
-                    return ChangeDirectoryReturnStatements.INVALID_DIRECTORY;
+                    DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY + "\n");
                 }
             }
             else{
                 File[] files = directory.listFiles();
                 if(files == null){
-                    return ChangeDirectoryReturnStatements.NO_CHILDREN;
+                    DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.NO_CHILDREN + "\n");
+
                 }
 
 
                 for( File file : files){
                     if(file.isDirectory() && Objects.equals(file.getName(), givenDirectory)){
                         System.setProperty("user.dir", file.getAbsolutePath());
-                        return null;
+                        return;
                     }
                 }
 
-                return ChangeDirectoryReturnStatements.INVALID_DIRECTORY;
+                DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY + "\n");
+                ;
             }
 
         }
-        return null;
+
     }
 
 
