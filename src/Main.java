@@ -1,40 +1,68 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public static void main(String[] args) {
-
     while(true){
         String[] totalCommand = getUserCommand();
 
         Map<String, ConsoleCommand> commands = ConsoleCommands.commands;
-        Map<String, ArrayList<String>> commandsAndArguments = new HashMap<String, ArrayList<String>>();
+        Map<String, ArrayList<String>> commandsAndArguments = new HashMap<>();
+        ArrayList<String> arguments = new ArrayList<>();
 
-        String currentCommand = "";
-        for (String currentItem : totalCommand) {
-            if (commands.containsKey(currentItem)) {
-                commandsAndArguments.put(currentItem, new ArrayList<String>());
-                currentCommand = currentItem;
-            } else {
-                if(!currentCommand.isEmpty())
-                    commandsAndArguments.get(currentCommand).add(currentItem);
+
+        String command = totalCommand.length > 0 ? totalCommand[0] : "";
+        arguments = totalCommand.length > 1
+                ? new ArrayList<>(Arrays.asList(totalCommand).subList(1, totalCommand.length))
+                : new ArrayList<>();
+
+        if(!command.isEmpty()){
+            if(commands.containsKey(command)){
+                ConsoleCommand currentCommandObject = commands.get(command);
+                currentCommandObject.executeCommand(arguments);
+                arguments.clear();
+            }
+            else{
+                StringBuilder argumentsString = new StringBuilder();
+                for(String item : arguments){
+                    argumentsString.append(item).append(" ");
+                }
+
+                ProcessBuilder pb = new ProcessBuilder (command, argumentsString.toString());
+                File directory = new File(DirectoryUtilities.getCurrentDirectory());
+                pb.directory(directory);
+
+                try{
+                    Process p = pb.start();
+
+                    //https://stackoverflow.com/questions/309424/how-do-i-read-convert-an-inputstream-into-a-string-in-java
+                    //Reference this ^
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                    for(String line; (line = reader.readLine()) != null;){
+                        System.out.println(line);
+                    }
+
+
+                    p.waitFor();
+                }
+                catch (Exception e){
+                    System.out.println("Error: " + e.getMessage());
+                }
+
             }
         }
-
-        for(Map.Entry<String, ArrayList<String>> entry : commandsAndArguments.entrySet()){
-            ConsoleCommand currentCommandObject = commands.get(entry.getKey());
-            currentCommandObject.executeCommand(entry.getValue());
-
-            ArrayList<String> commandAndArguments = new ArrayList<String>();
-            commandAndArguments.add(entry.getKey());
-            commandAndArguments.addAll(entry.getValue());
-            CommandHistory.previousCommands.add(commandAndArguments);
+        else{
+            DirectoryUtilities.printDirectoryToCommandLine("No command entered.");
         }
 
-
     }
-
 }
+
 
 
 

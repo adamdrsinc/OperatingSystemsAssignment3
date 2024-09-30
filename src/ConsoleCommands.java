@@ -9,7 +9,7 @@ public class ConsoleCommands {
     public static final String PIPE = "|";
     public static final String EXIT = "exit";
     public static final String PREVIOUS_COMMAND = "^";
-    public static final String HISTORY = "history";
+    private static final String HISTORY = "history";
 
     public static Map<String, ConsoleCommand> commands = Map.of(
         PTIME, new PipeCommand(),
