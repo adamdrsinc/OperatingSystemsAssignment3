@@ -20,12 +20,13 @@ public class PreviousCommand implements ConsoleCommand{
             return;
         }
 
-        if(index < 0 || index >= previousCommands.size()){
+        if(index < 0 || index >= previousCommands.size() + 1){
             DirectoryUtilities.printDirectoryToCommandLine("Invalid command index. Number is too small or too great.\n");
             return;
         }
 
-        ArrayList<String> previousCommand = previousCommands.get(index);
+
+        ArrayList<String> previousCommand = previousCommands.get(index + 1);
         String command = previousCommand.getFirst();
         ArrayList<String> commandArguments = new ArrayList<>(previousCommand.subList(1, previousCommand.size()));
 

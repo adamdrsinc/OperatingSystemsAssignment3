@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,13 +18,14 @@ public class ConsoleCommands {
             "history", new CommandHistory()
     );
 
-    public static void executeAnyCommand(String command, ArrayList<String> arguments) {
+    public static boolean executeAnyCommand(String command, ArrayList<String> arguments) {
         Map<String, ConsoleCommand> commands = ConsoleCommands.commands;
 
         if(commands.containsKey(command)){
             ConsoleCommand currentCommandObject = commands.get(command);
             //Executes built-in shell command
             currentCommandObject.executeCommand(arguments);
+            return true;
         }
         else{
             StringBuilder fullCommand = new StringBuilder(command);
@@ -35,12 +33,18 @@ public class ConsoleCommands {
                 fullCommand.append(" ").append(argument);
             }
 
-            executeExternalCommand(fullCommand);
-
+            return executeExternalCommand(command, arguments);
         }
     }
 
-    private static void executeExternalCommand(StringBuilder fullCommand) {
+    private static boolean executeExternalCommand(String command, ArrayList<String> arguments) {
+        String commandWithoutAmpersand = command.replace("&", "");
+
+        StringBuilder fullCommand = new StringBuilder(commandWithoutAmpersand);
+        for(String argument : arguments){
+            fullCommand.append(" ").append(argument);
+        }
+
         String operatingSystem = System.getProperty("os.name").toLowerCase();
         String commandPrefix = "";
         if(operatingSystem.contains("win")){
@@ -62,6 +66,7 @@ public class ConsoleCommands {
 
         try{
             Process p = pb.start();
+            long time = System.currentTimeMillis();
 
             //https://stackoverflow.com/questions/309424/how-do-i-read-convert-an-inputstream-into-a-string-in-java
             //Reference this ^
@@ -71,13 +76,21 @@ public class ConsoleCommands {
                 System.out.println(line);
             }
 
+            if(!(command.charAt(command.length()-1) == '&')){
+                boolean exitCode = (p.waitFor() == 0);
+                time = System.currentTimeMillis() - time;
+                PTimeCommand.addMilliseconds(time);
 
-            if(!(fullCommand.charAt(fullCommand.length() - 1) == '&')){
-                p.waitFor();
+                return exitCode;
             }
+            else{
+                return true;
+            }
+
         }
         catch (Exception e){
             System.out.println("Error: " + e.getMessage());
+            return false;
         }
     }
 
