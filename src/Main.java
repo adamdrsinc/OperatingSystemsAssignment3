@@ -7,10 +7,9 @@ import java.util.regex.Pattern;
 
 public class Main{
     public static void main(String[] args) {
+
         while(true){
             String[] totalCommand = getUserCommand();
-
-            Map<String, ConsoleCommand> commands = ConsoleCommands.commands;
 
             String command = totalCommand.length > 0 ? totalCommand[0] : "";
             ArrayList<String> arguments = totalCommand.length > 1
@@ -18,8 +17,12 @@ public class Main{
                     : new ArrayList<>();
 
             if(!command.isEmpty()){
+
+                Map<String, ConsoleCommand> commands = ConsoleCommands.commands;
+
                 if(commands.containsKey(command)){
                     ConsoleCommand currentCommandObject = commands.get(command);
+                    //Executes built-in shell command
                     currentCommandObject.executeCommand(arguments);
                 }
                 else{
@@ -27,43 +30,8 @@ public class Main{
                     for (String argument : arguments) {
                         fullCommand.append(" ").append(argument);
                     }
-                    String operatingSystem = System.getProperty("os.name").toLowerCase();
-                    String commandPrefix = "";
-                    if(operatingSystem.contains("win")){
-                        commandPrefix = "cmd.exe"; //cmd.exe
-                    }
-                    else if(operatingSystem.contains("linux")){
-                        commandPrefix = "/bin/sh";
-                    }
 
-
-
-                    ProcessBuilder pb = new ProcessBuilder(
-                            commandPrefix,
-                            "/c",
-                            fullCommand.toString()
-                    );
-
-                    File directory = new File(DirectoryUtilities.getCurrentDirectory());
-                    pb.directory(directory);
-
-                    try{
-                        Process p = pb.start();
-
-                        //https://stackoverflow.com/questions/309424/how-do-i-read-convert-an-inputstream-into-a-string-in-java
-                        //Reference this ^
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-                        for(String line; (line = reader.readLine()) != null;){
-                            System.out.println(line);
-                        }
-
-
-                        p.waitFor();
-                    }
-                    catch (Exception e){
-                        System.out.println("Error: " + e.getMessage());
-                    }
+                    executeExternalCommand(fullCommand);
 
                 }
             }
@@ -71,11 +39,51 @@ public class Main{
                 DirectoryUtilities.printDirectoryToCommandLine("No command entered.\n");
             }
 
+            CommandHistory.add(new ArrayList<>(Arrays.asList(totalCommand)));
+
         }
     }
 
+    private static void executeExternalCommand(StringBuilder fullCommand) {
+        String operatingSystem = System.getProperty("os.name").toLowerCase();
+        String commandPrefix = "";
+        if(operatingSystem.contains("win")){
+            commandPrefix = "cmd.exe"; //cmd.exe
+        }
+        else if(operatingSystem.contains("linux")){
+            commandPrefix = "/bin/sh";
+        }
 
 
+        ProcessBuilder pb = new ProcessBuilder(
+                commandPrefix,
+                "/c",
+                fullCommand.toString()
+        );
+
+        File directory = new File(DirectoryUtilities.getCurrentDirectory());
+        pb.directory(directory);
+
+        try{
+            Process p = pb.start();
+
+            //https://stackoverflow.com/questions/309424/how-do-i-read-convert-an-inputstream-into-a-string-in-java
+            //Reference this ^
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            for(String line; (line = reader.readLine()) != null;){
+                System.out.println(line);
+            }
+
+
+            if(!(fullCommand.charAt(fullCommand.length() - 1) == '&')){
+                p.waitFor();
+            }
+        }
+        catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 
 
     private static String[] getUserCommand(){

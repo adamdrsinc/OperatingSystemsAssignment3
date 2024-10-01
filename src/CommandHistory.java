@@ -1,7 +1,15 @@
 import java.util.ArrayList;
 
 public class CommandHistory implements ConsoleCommand{
-    public static ArrayList<ArrayList<String>> previousCommands = new ArrayList<>();
+    private static ArrayList<ArrayList<String>> previousCommands = new ArrayList<>();
+
+    public static void add(ArrayList<String> command){
+        previousCommands.add(command);
+    }
+
+    public static ArrayList<ArrayList<String>> get(){
+        return previousCommands;
+    }
 
 
     @Override
