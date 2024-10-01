@@ -46,23 +46,30 @@ public class ConsoleCommands {
         }
 
         String operatingSystem = System.getProperty("os.name").toLowerCase();
-        String commandPrefix = "";
-        if(operatingSystem.contains("win")){
-            commandPrefix = "cmd.exe"; //cmd.exe
-        }
-        else if(operatingSystem.contains("linux")){
-            commandPrefix = "/bin/sh";
-        }
-        else if(operatingSystem.contains("mac")){
-            commandPrefix = "/bin/sh";
+        List<String> commandList = new ArrayList<>();
+        if (operatingSystem.contains("win")) {
+            commandList.add("cmd.exe");
+            commandList.add("/c");
+        } else if (operatingSystem.contains("nix")
+                || operatingSystem.contains("nux")
+                || operatingSystem.contains("aix")
+                || operatingSystem.contains("mac")) {
+            commandList.add("/bin/sh");
+            commandList.add("-c");
+        } else{
+            System.out.println("Operating System not supported.");
+            return false;
         }
 
 
-        ProcessBuilder pb = new ProcessBuilder(
-                commandPrefix,
-                "/c",
-                fullCommand.toString()
-        );
+
+
+        commandList.add(fullCommand.toString());
+
+
+        ProcessBuilder pb = new ProcessBuilder(commandList);
+        pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
         File directory = new File(DirectoryUtilities.getCurrentDirectory());
         pb.directory(directory);
