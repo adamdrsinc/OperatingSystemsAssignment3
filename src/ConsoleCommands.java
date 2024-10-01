@@ -53,6 +53,9 @@ public class ConsoleCommands {
         else if(operatingSystem.contains("linux")){
             commandPrefix = "/bin/sh";
         }
+        else if(operatingSystem.contains("mac")){
+            commandPrefix = "/bin/sh";
+        }
 
 
         ProcessBuilder pb = new ProcessBuilder(
