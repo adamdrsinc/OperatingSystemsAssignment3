@@ -26,7 +26,7 @@ public class PreviousCommand implements ConsoleCommand{
         }
 
 
-        ArrayList<String> previousCommand = previousCommands.get(index + 1);
+        ArrayList<String> previousCommand = previousCommands.get(index - 1);
         String command = previousCommand.getFirst();
         ArrayList<String> commandArguments = new ArrayList<>(previousCommand.subList(1, previousCommand.size()));
 
