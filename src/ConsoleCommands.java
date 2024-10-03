@@ -28,46 +28,43 @@ public class ConsoleCommands {
             return true;
         }
         else{
-            StringBuilder fullCommand = new StringBuilder(command);
-            for (String argument : arguments) {
-                fullCommand.append(" ").append(argument);
-            }
-
             return executeExternalCommand(command, arguments);
         }
     }
 
     private static boolean executeExternalCommand(String command, ArrayList<String> arguments) {
-        String commandWithoutAmpersand = command.replace("&", "");
 
-        StringBuilder fullCommand = new StringBuilder(commandWithoutAmpersand);
+        boolean isAmpersand = false;
+        if(!arguments.isEmpty()){
+            isAmpersand = arguments.getLast().equals("&");
+        }
+
+        if(isAmpersand){
+            arguments.removeLast();
+        }
+
+        StringBuilder fullCommand = new StringBuilder(command);
         for(String argument : arguments){
             fullCommand.append(" ").append(argument);
         }
 
+
         String operatingSystem = System.getProperty("os.name").toLowerCase();
-        List<String> commandList = new ArrayList<>();
+
+        ProcessBuilder pb;
         if (operatingSystem.contains("win")) {
-            commandList.add("cmd.exe");
-            commandList.add("/c");
+            pb = new ProcessBuilder("cmd.exe", "/c", fullCommand.toString());
+
         } else if (operatingSystem.contains("nix")
                 || operatingSystem.contains("nux")
                 || operatingSystem.contains("aix")
                 || operatingSystem.contains("mac")) {
-            commandList.add("/bin/sh");
-            commandList.add("-c");
+            pb = new ProcessBuilder("/bin/sh", "-c", fullCommand.toString());
         } else{
             System.out.println("Operating System not supported.");
             return false;
         }
 
-
-
-
-        commandList.add(fullCommand.toString());
-
-
-        ProcessBuilder pb = new ProcessBuilder(commandList);
         pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
@@ -86,7 +83,7 @@ public class ConsoleCommands {
                 System.out.println(line);
             }
 
-            if(!(command.charAt(command.length()-1) == '&')){
+            if(!isAmpersand){
                 boolean exitCode = (p.waitFor() == 0);
                 time = System.currentTimeMillis() - time;
                 PTimeCommand.addMilliseconds(time);

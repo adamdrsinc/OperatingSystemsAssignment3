@@ -8,7 +8,7 @@ public class PreviousCommand implements ConsoleCommand{
 
         String indexStr = !arguments.isEmpty() ? arguments.getFirst() : "";
         if(indexStr.isEmpty()){
-            DirectoryUtilities.printDirectoryToCommandLine("No command index given.\n");
+            DirectoryUtilities.printDirectoryToCommandLine("No command index given.");
             return;
         }
 
@@ -16,12 +16,12 @@ public class PreviousCommand implements ConsoleCommand{
         try{
             index = Integer.parseInt(indexStr);
         }catch(NumberFormatException e){
-            DirectoryUtilities.printDirectoryToCommandLine("Invalid command index.\n");
+            DirectoryUtilities.printDirectoryToCommandLine("Invalid command index.");
             return;
         }
 
         if(index < 0 || index >= previousCommands.size() + 1){
-            DirectoryUtilities.printDirectoryToCommandLine("Invalid command index. Number is too small or too great.\n");
+            DirectoryUtilities.printDirectoryToCommandLine("Invalid command index. Number is too small or too great.");
             return;
         }
 

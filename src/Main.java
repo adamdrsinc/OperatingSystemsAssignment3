@@ -12,16 +12,19 @@ public class Main{
                     ? new ArrayList<>(Arrays.asList(totalCommand).subList(1, totalCommand.length))
                     : new ArrayList<>();
 
+
             if(!command.isEmpty()){
                 if(!ConsoleCommands.executeAnyCommand(command, arguments)){
-                    DirectoryUtilities.printDirectoryToCommandLine("Invalid Command.\n");
+                    StringBuilder totalCommandStr = new StringBuilder();
+                    for(String str : totalCommand)
+                        totalCommandStr.append(str);
+                    DirectoryUtilities.printDirectoryToCommandLine("Invalid Command: " + totalCommandStr + "\n");
                 }
-            }
-            else{
-                DirectoryUtilities.printDirectoryToCommandLine("No command entered.\n");
+
+                CommandHistory.add(new ArrayList<>(Arrays.asList(totalCommand)));
+
             }
 
-            CommandHistory.add(new ArrayList<>(Arrays.asList(totalCommand)));
 
         }
     }

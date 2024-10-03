@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class PTimeCommand implements ConsoleCommand{
     @Override
     public void executeCommand(ArrayList<String> arguments) {
-        System.out.println(getCurrentTimeSeconds());
+        System.out.println("Total time in child processes: " + getCurrentTimeSeconds() + " seconds");
     }
 
     private static double currentTimeMilliseconds = 0;
