@@ -24,13 +24,13 @@ public class ChangeDirectoryCommand implements ConsoleCommand{
                     System.setProperty("user.dir", parentDirectory.getAbsolutePath());
                 }
                 else{
-                    DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY);
+                    DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY + "\n");
                 }
             }
             else{
                 File[] files = directory.listFiles();
                 if(files == null){
-                    DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.NO_CHILDREN);
+                    DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.NO_CHILDREN + "\n");
 
                 }
 
@@ -42,7 +42,7 @@ public class ChangeDirectoryCommand implements ConsoleCommand{
                     }
                 }
 
-                DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY);
+                DirectoryUtilities.printDirectoryToCommandLine(ChangeDirectoryReturnStatements.INVALID_DIRECTORY + "\n");
                 ;
             }
 
@@ -51,6 +51,6 @@ public class ChangeDirectoryCommand implements ConsoleCommand{
 }
 
 class ChangeDirectoryReturnStatements{
-    public static final String INVALID_DIRECTORY = "INVALID DIRECTORY";
+    public static final String INVALID_DIRECTORY = "Directory not found";
     public static final String NO_CHILDREN = "No children in the directory";
 }

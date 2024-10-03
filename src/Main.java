@@ -17,8 +17,9 @@ public class Main{
                 if(!ConsoleCommands.executeAnyCommand(command, arguments)){
                     StringBuilder totalCommandStr = new StringBuilder();
                     for(String str : totalCommand)
-                        totalCommandStr.append(str);
-                    DirectoryUtilities.printDirectoryToCommandLine("Invalid Command: " + totalCommandStr + "\n");
+                        totalCommandStr.append(str).append(" ");
+
+                    System.out.println("Invalid Command: " + totalCommandStr);
                 }
 
                 CommandHistory.add(new ArrayList<>(Arrays.asList(totalCommand)));

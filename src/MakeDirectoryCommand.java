@@ -10,10 +10,10 @@ public class MakeDirectoryCommand implements ConsoleCommand {
         for(String directoryName: arguments){
             File newDirectory = new File(DirectoryUtilities.getCurrentDirectory() + "/" + directoryName);
             if(newDirectory.mkdir()){
-                DirectoryUtilities.printDirectoryToCommandLine("Directory [" + directoryName + "] created successfully");
+                DirectoryUtilities.printDirectoryToCommandLine("Directory [" + directoryName + "] created successfully\n");
             }
             else{
-                DirectoryUtilities.printDirectoryToCommandLine("Directory [" + directoryName + "] could not be created");
+                DirectoryUtilities.printDirectoryToCommandLine("Directory [" + directoryName + "] could not be created\n");
             }
         }
     }

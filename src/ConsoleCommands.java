@@ -44,9 +44,12 @@ public class ConsoleCommands {
         }
 
         StringBuilder fullCommand = new StringBuilder(command);
-        for(String argument : arguments){
-            fullCommand.append(" ").append(argument);
+        if(!arguments.isEmpty()){
+            for(String argument : arguments){
+                fullCommand.append(" ").append(argument);
+            }
         }
+
 
 
         String operatingSystem = System.getProperty("os.name").toLowerCase();
