@@ -15,7 +15,7 @@ public class RemoveDirectoryCommand implements ConsoleCommand {
     @Override
     public void executeCommand(ArrayList<String> arguments) {
         for(String directoryName: arguments){
-            File newDirectory = new File(DirectoryUtilities.getCurrentDirectory() + "/" + directoryName);
+            File newDirectory = new File(DirectoryUtilities.getCurrentDirectory() + File.separator + directoryName);
             if(newDirectory.isDirectory()) {
                 if(newDirectory.delete()){
                     System.out.println("Directory [" + directoryName + "] deleted successfully");

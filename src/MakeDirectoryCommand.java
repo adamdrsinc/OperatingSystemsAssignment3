@@ -17,7 +17,8 @@ public class MakeDirectoryCommand implements ConsoleCommand {
         for(String directoryName: arguments){
             //Repeatedly obtain the files in the current directory in case the user attempts to make the same directory
             //twice in the given arguments.
-            File newDirectory = new File(DirectoryUtilities.getCurrentDirectory() + "/" + directoryName);
+            File newDirectory = new File(DirectoryUtilities.getCurrentDirectory() + File.separator + directoryName);
+
             if(newDirectory.mkdir()){
                 System.out.println("Directory [" + directoryName + "] created successfully");
             }
