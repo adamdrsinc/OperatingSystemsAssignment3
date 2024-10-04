@@ -18,4 +18,4 @@ jar {
         attributes 'Main-Class': 'Main'
     }
 }
-archivesBaseName = 'AssnX'
+archivesBaseName = 'Assn3'

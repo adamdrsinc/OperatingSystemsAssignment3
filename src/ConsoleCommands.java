@@ -13,12 +13,12 @@ public class ConsoleCommands {
 
     public static final Map<String, ConsoleCommand> commands = Map.of(
             "ptime", new PTimeCommand(),
-            "list", new ListCommand(),
-            "cd", new ChangeDirectoryCommand(),
-            "mdir", new MakeDirectoryCommand(),
-            "rdir", new RemoveDirectoryCommand(),
-            "exit", new ExitCommand(),
-            "^", new PreviousCommand(),
+            "list",  new ListCommand(),
+            "cd",    new ChangeDirectoryCommand(),
+            "mdir",  new MakeDirectoryCommand(),
+            "rdir",  new RemoveDirectoryCommand(),
+            "exit",  new ExitCommand(),
+            "^",     new PreviousCommand(),
             "history", new CommandHistory()
     );
 
