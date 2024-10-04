@@ -1,8 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
 
-//Update
-
 /**
  * A built-in command to handle removing directories.
  * @author Adam Sinclair

@@ -5,8 +5,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//Update
-
 /**
  * A class for handling the execution of built-in and external console commands.
  * @author Adam Sinclair

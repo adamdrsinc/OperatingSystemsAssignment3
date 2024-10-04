@@ -16,6 +16,3 @@ public class ExitCommand implements ConsoleCommand{
     }
 }
 
-
-//Update
-
