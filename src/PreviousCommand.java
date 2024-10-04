@@ -30,8 +30,8 @@ public class PreviousCommand implements ConsoleCommand{
             return;
         }
 
-        if(index < 0 || index >= previousCommands.size() + 1){
-            System.out.println("Invalid command index. Number is too small or too great.");
+        if(index <= 0 || index >= previousCommands.size()){
+            System.out.println("Invalid command index. Maximum command index is " + (previousCommands.size()-1));
             return;
         }
 

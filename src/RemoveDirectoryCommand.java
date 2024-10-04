@@ -18,10 +18,10 @@ public class RemoveDirectoryCommand implements ConsoleCommand {
             File newDirectory = new File(DirectoryUtilities.getCurrentDirectory() + "/" + directoryName);
             if(newDirectory.isDirectory()) {
                 if(newDirectory.delete()){
-                    DirectoryUtilities.printDirectoryToCommandLine("Directory [" + directoryName + "] deleted successfully\n");
+                    System.out.println("Directory [" + directoryName + "] deleted successfully");
                 }
                 else{
-                    DirectoryUtilities.printDirectoryToCommandLine("Directory [" + directoryName + "] could not be deleted\n");
+                    System.out.println("Directory [" + directoryName + "] could not be deleted\n");
                 }
             }
 

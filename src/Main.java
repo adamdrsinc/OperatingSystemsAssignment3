@@ -14,6 +14,7 @@ public class Main{
                     : new ArrayList<>();
 
             if(!command.isEmpty()){
+                CommandHistory.add(new ArrayList<>(Arrays.asList(totalCommand)));
                 if(!ConsoleCommands.executeAnyCommand(command, arguments)){
                     StringBuilder totalCommandStr = new StringBuilder();
                     for(String str : totalCommand){
@@ -22,14 +23,8 @@ public class Main{
 
                     System.out.println("Invalid Command: " + totalCommandStr);
                 }
-
-                CommandHistory.add(new ArrayList<>(Arrays.asList(totalCommand)));
-
             }
-
-
         }
     }
-
 }
 
