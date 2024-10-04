@@ -5,9 +5,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A class for handling the execution of built-in and external console commands.
+ * @author Adam Sinclair
+ */
 public class ConsoleCommands {
 
-    public static Map<String, ConsoleCommand> commands = Map.of(
+    public static final Map<String, ConsoleCommand> commands = Map.of(
             "ptime", new PTimeCommand(),
             "list", new ListCommand(),
             "cd", new ChangeDirectoryCommand(),
@@ -18,6 +22,14 @@ public class ConsoleCommands {
             "history", new CommandHistory()
     );
 
+    /**
+     * Checks if the given command is a build in command and executes it, if not,
+     * the command is then run as an external command.
+     * @param command The command for the shell to execute.
+     * @param arguments The arguments for the command.
+     * @return a boolean which states the successful execution of the command.
+     * @author Adam Sinclair
+     */
     public static boolean executeAnyCommand(String command, ArrayList<String> arguments) {
         Map<String, ConsoleCommand> commands = ConsoleCommands.commands;
 
@@ -32,79 +44,11 @@ public class ConsoleCommands {
         }
     }
 
-    private static boolean executeExternalCommand(String command, ArrayList<String> arguments) {
-
-        boolean isAmpersand = false;
-        if(!arguments.isEmpty()){
-            isAmpersand = arguments.getLast().equals("&");
-        }
-
-        if(isAmpersand){
-            arguments.removeLast();
-        }
-
-        StringBuilder fullCommand = new StringBuilder(command);
-        if(!arguments.isEmpty()){
-            for(String argument : arguments){
-                fullCommand.append(" ").append(argument);
-            }
-        }
-
-
-
-        String operatingSystem = System.getProperty("os.name").toLowerCase();
-
-        ProcessBuilder pb;
-        if (operatingSystem.contains("win")) {
-            pb = new ProcessBuilder("cmd.exe", "/c", fullCommand.toString());
-
-        } else if (operatingSystem.contains("nix")
-                || operatingSystem.contains("nux")
-                || operatingSystem.contains("aix")
-                || operatingSystem.contains("mac")) {
-            pb = new ProcessBuilder("/bin/sh", "-c", fullCommand.toString());
-        } else{
-            System.out.println("Operating System not supported.");
-            return false;
-        }
-
-        pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
-        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-
-        File directory = new File(DirectoryUtilities.getCurrentDirectory());
-        pb.directory(directory);
-
-        try{
-            Process p = pb.start();
-            long time = System.currentTimeMillis();
-
-            //Converting the stream of data obtained from the external command into strings.
-            //https://stackoverflow.com/questions/309424/how-do-i-read-convert-an-inputstream-into-a-string-in-java
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            for(String line; (line = reader.readLine()) != null;){
-                System.out.println(line);
-            }
-            //End reference.
-
-            if(!isAmpersand){
-                boolean exitCode = (p.waitFor() == 0);
-                time = System.currentTimeMillis() - time;
-                PTimeCommand.addMilliseconds(time);
-
-                return exitCode;
-            }
-            else{
-                return true;
-            }
-
-        }
-        catch (Exception e){
-            System.out.println("Error: " + e.getMessage());
-            return false;
-        }
-    }
-
-
+    /**
+     * Obtains a user's desired command and parses the separate arguments.
+     * @return the parsed command.
+     * @author Adam Sinclair
+     */
     public static String[] getUserCommand(){
         Scanner scanner = new Scanner(System.in);
 
@@ -137,5 +81,87 @@ public class ConsoleCommands {
         }
 
         return matchList.toArray(new String[matchList.size()]);
+    }
+
+    /**
+     * Executes the given command along with arguments through use of the Process class.
+     * @param command The command for the shell to execute.
+     * @param arguments The arguments for the command.
+     * @return a boolean which states the successful execution of the command.
+     * @author Adam Sinclair
+     */
+    private static boolean executeExternalCommand(String command, ArrayList<String> arguments) {
+
+        //Checking if the command will use Process.waitFor()
+        boolean isAmpersand = false;
+        if(!arguments.isEmpty()){
+            isAmpersand = arguments.getLast().equals("&");
+        }
+
+        //Remove the ampersand as this is not part of the command.
+        if(isAmpersand){
+            arguments.removeLast();
+        }
+
+        StringBuilder fullCommand = new StringBuilder(command);
+        if(!arguments.isEmpty()){
+            for(String argument : arguments){
+                fullCommand.append(" ").append(argument);
+            }
+        }
+
+        ProcessBuilder pb;
+        String operatingSystem = System.getProperty("os.name").toLowerCase();
+
+        //Building the ProcessBuilder based upon the user's Operating System.
+        if (operatingSystem.contains("win")) {
+            pb = new ProcessBuilder("cmd.exe", "/c", fullCommand.toString());
+
+        } else if (operatingSystem.contains("nix")
+                || operatingSystem.contains("nux")
+                || operatingSystem.contains("aix")
+                || operatingSystem.contains("mac")) {
+            pb = new ProcessBuilder("/bin/sh", "-c", fullCommand.toString());
+        } else{
+            System.out.println("Operating System not supported.");
+            return false;
+        }
+
+        //Redirecting output and input to the parent process.
+        pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+
+        File directory = new File(DirectoryUtilities.getCurrentDirectory());
+        pb.directory(directory);
+
+        try{
+            Process p = pb.start();
+            long time = System.currentTimeMillis();
+
+            //Converting the stream of data obtained from the external command into strings.
+            //Code adapted from: https://stackoverflow.com/questions/309424/how-do-i-read-convert-an-inputstream-into-a-string-in-java
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            for(String line; (line = reader.readLine()) != null;){
+                System.out.println(line);
+            }
+            //End reference.
+
+            //If the user did not pass in an &, then the child is waited on and the time taken added.
+            if(!isAmpersand){
+                boolean exitCode = (p.waitFor() == 0);
+                time = System.currentTimeMillis() - time;
+                PTimeCommand.addMilliseconds(time);
+
+                return exitCode;
+            }
+            else{
+                return true;
+            }
+
+        }
+        catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+            return false;
+        }
     }
 }

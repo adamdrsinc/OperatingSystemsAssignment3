@@ -1,14 +1,24 @@
-import java.io.Console;
 import java.util.ArrayList;
 
+/**
+ * A built-in command for using any of the previous commands given to the command line in the current session.
+ * The previous commands are found through the use of the CommandHistory class, through the get() method.
+ * @author Adam Sinclair
+ */
 public class PreviousCommand implements ConsoleCommand{
+
+    /**
+     * Executes the desired command based upon the index given as an argument. The index is a base +1 index.
+     * @param arguments The index of the desired command.
+     * @author Adam Sinclair
+     */
     @Override
     public void executeCommand(ArrayList<String> arguments) {
         ArrayList<ArrayList<String>> previousCommands = CommandHistory.get();
 
         String indexStr = !arguments.isEmpty() ? arguments.getFirst() : "";
         if(indexStr.isEmpty()){
-            DirectoryUtilities.printDirectoryToCommandLine("No command index given.");
+            System.out.println("No command index given.");
             return;
         }
 
@@ -16,12 +26,12 @@ public class PreviousCommand implements ConsoleCommand{
         try{
             index = Integer.parseInt(indexStr);
         }catch(NumberFormatException e){
-            DirectoryUtilities.printDirectoryToCommandLine("Invalid command index.");
+            System.out.println("Invalid command index.");
             return;
         }
 
         if(index < 0 || index >= previousCommands.size() + 1){
-            DirectoryUtilities.printDirectoryToCommandLine("Invalid command index. Number is too small or too great.");
+            System.out.println("Invalid command index. Number is too small or too great.");
             return;
         }
 
