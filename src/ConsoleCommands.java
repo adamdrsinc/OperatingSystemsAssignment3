@@ -78,13 +78,13 @@ public class ConsoleCommands {
             Process p = pb.start();
             long time = System.currentTimeMillis();
 
+            //Converting the stream of data obtained from the external command into strings.
             //https://stackoverflow.com/questions/309424/how-do-i-read-convert-an-inputstream-into-a-string-in-java
-            //Reference this ^
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
             for(String line; (line = reader.readLine()) != null;){
                 System.out.println(line);
             }
+            //End reference.
 
             if(!isAmpersand){
                 boolean exitCode = (p.waitFor() == 0);
